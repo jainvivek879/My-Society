@@ -1,0 +1,8 @@
+{
+  "name": "OmniGate",
+  "description": "OmniGate is a secure cloud platform for Smart Housing Society Management including visitor management, residents, security, maintenance, deliveries, notices, complaints and administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

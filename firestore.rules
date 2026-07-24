@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isAuthenticated();
+      
+      match /{allSubcollections=**} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+
+    match /societies/{societyId} {
+      allow read, write: if isAuthenticated();
+
+      match /{allSubcollections=**} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+
+    match /flats/{flatId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /residents/{residentId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /guards/{guardId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /visitors/{visitorId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /complaints/{complaintId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /maintenance/{maintenanceId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /notices/{noticeId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /payments/{paymentId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /deliveries/{deliveryId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /pre_approvals/{passId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /visitorPasses/{passId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /blocks/{blockId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /settings/{settingId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /audit_logs/{logId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /blacklist/{phone} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Default fallback requiring authentication
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
+

@@ -1,0 +1,564 @@
+{
+  "entities": {
+    "Society": {
+      "title": "Society",
+      "description": "Represents an apartment society or gated community tenant profile.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique society ID.",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the society.",
+          "maxLength": 100
+        },
+        "address": {
+          "type": "string",
+          "description": "Address of the society.",
+          "maxLength": 200
+        },
+        "city": {
+          "type": "string",
+          "description": "City of the society.",
+          "maxLength": 50
+        },
+        "state": {
+          "type": "string",
+          "description": "State of the society.",
+          "maxLength": 50
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "ZIP / Postal Code.",
+          "maxLength": 10,
+          "pattern": "^[0-9a-zA-Z ]+$"
+        },
+        "totalBlocks": {
+          "type": "integer",
+          "description": "Number of blocks/towers."
+        },
+        "totalFlats": {
+          "type": "integer",
+          "description": "Total flats within society."
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "Society management contact email.",
+          "maxLength": 100
+        },
+        "contactPhone": {
+          "type": "string",
+          "description": "Society management contact phone.",
+          "maxLength": 20
+        },
+        "subscriptionPlan": {
+          "type": "string",
+          "enum": ["free", "growth", "enterprise"],
+          "description": "SaaS plan subscribed."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "address", "city", "state", "zipCode", "contactEmail", "subscriptionPlan", "createdAt", "updatedAt"]
+    },
+    "UserProfilePublic": {
+      "title": "User Profile Public",
+      "description": "Non-sensitive user public metadata, visible to residents/guards in the same society.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID.",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Public display name.",
+          "maxLength": 80
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL to profile photo.",
+          "maxLength": 500
+        },
+        "role": {
+          "type": "string",
+          "enum": ["SUPER_ADMIN", "SOCIETY_ADMIN", "SECURITY_GUARD", "RESIDENT"],
+          "description": "User role."
+        },
+        "societyId": {
+          "type": "string",
+          "description": "Associated society ID (isolated context).",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "role", "createdAt"]
+    },
+    "UserProfilePrivate": {
+      "title": "User Profile Private",
+      "description": "Sensitive personally identifiable information (PII) restricted to the owner and Admins.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID.",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "description": "Sensitive login email address.",
+          "maxLength": 100
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Sensitive mobile number for verification and login.",
+          "maxLength": 20
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Account active status."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "isActive", "updatedAt"]
+    },
+    "TowerBlock": {
+      "title": "Tower Block",
+      "description": "A tower or block within a specific society tenant.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of block, e.g. Block C.",
+          "maxLength": 50
+        },
+        "totalFloors": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "societyId", "name", "totalFloors", "createdAt"]
+    },
+    "Flat": {
+      "title": "Flat",
+      "description": "A residential flat/apartment within a block/tower.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "blockId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "flatNumber": {
+          "type": "string",
+          "description": "Flat door identifier.",
+          "maxLength": 20
+        },
+        "floor": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["occupied", "vacant", "under_maintenance"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "societyId", "blockId", "flatNumber", "floor", "status", "createdAt"]
+    },
+    "Resident": {
+      "title": "Resident",
+      "description": "Resident specific mapping profile linking a user profile to a flat.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "flatId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentType": {
+          "type": "string",
+          "enum": ["OWNER_RESIDING", "OWNER_NON_RESIDING", "TENANT", "FAMILY_MEMBER"]
+        },
+        "familyMembersCount": {
+          "type": "integer"
+        },
+        "isPrimaryContact": {
+          "type": "boolean"
+        },
+        "emergencyContact": {
+          "type": "string",
+          "maxLength": 20
+        }
+      },
+      "required": ["id", "societyId", "flatId", "residentType", "familyMembersCount", "isPrimaryContact", "emergencyContact"]
+    },
+    "SecurityGuard": {
+      "title": "Security Guard",
+      "description": "Security personnel profile and active duty parameters.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "shift": {
+          "type": "string",
+          "enum": ["morning", "afternoon", "night"]
+        },
+        "gateAssigned": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "badgeNumber": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "activeDuty": {
+          "type": "boolean"
+        }
+      },
+      "required": ["id", "societyId", "shift", "gateAssigned", "badgeNumber", "activeDuty"]
+    },
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Registered vehicles belonging to a flat and resident.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "flatId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "vehicleNumber": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "type": {
+          "type": "string",
+          "enum": ["TWO_WHEELER", "FOUR_WHEELER", "OTHER"]
+        },
+        "makeModel": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "color": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "parkingSlotNumber": {
+          "type": "string",
+          "maxLength": 30
+        }
+      },
+      "required": ["id", "societyId", "flatId", "ownerId", "vehicleNumber", "type", "makeModel", "color"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Broadcast announcement or targeted alert within the multi-tenant scope.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "type": {
+          "type": "string",
+          "enum": ["announcement", "visitor_approval", "delivery_alert", "emergency"]
+        },
+        "targetRoles": {
+          "type": "array",
+          "description": "User roles targeted for this notification."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "societyId", "title", "body", "type", "createdAt"]
+    },
+    "SocietySettings": {
+      "title": "Society Settings",
+      "description": "Tenant specific configuration settings.",
+      "type": "object",
+      "properties": {
+        "societyId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "allowGuestSelfCheckIn": {
+          "type": "boolean"
+        },
+        "requireDeliveryOtp": {
+          "type": "boolean"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["societyId", "allowGuestSelfCheckIn", "requireDeliveryOtp", "updatedAt"]
+    },
+    "VisitorLog": {
+      "title": "Visitor Log",
+      "description": "Log of visitor arrivals, walk-ins, and checkout timestamps.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "societyId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatNumber": { "type": "string", "maxLength": 20 },
+        "blockId": { "type": "string", "maxLength": 64 },
+        "visitorName": { "type": "string", "maxLength": 100 },
+        "visitorPhone": { "type": "string", "maxLength": 20 },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "vehicleNumber": { "type": "string", "maxLength": 20 },
+        "purpose": { "type": "string", "maxLength": 100 },
+        "numberOfVisitors": { "type": "integer" },
+        "expectedDuration": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "CHECKED_IN", "CHECKED_OUT", "CANCELLED"] },
+        "residentId": { "type": "string", "maxLength": 128 },
+        "residentName": { "type": "string", "maxLength": 100 },
+        "checkedInByGuardId": { "type": "string", "maxLength": 128 },
+        "checkedInByGuardName": { "type": "string", "maxLength": 100 },
+        "checkedOutByGuardId": { "type": "string", "maxLength": 128 },
+        "checkedOutByGuardName": { "type": "string", "maxLength": 100 },
+        "preApprovedPassId": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "checkInTime": { "type": "string", "format": "date-time" },
+        "checkOutTime": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "societyId", "flatId", "flatNumber", "blockId", "visitorName", "visitorPhone", "purpose", "numberOfVisitors", "status", "residentId", "residentName", "createdAt", "updatedAt"]
+    },
+    "PreApprovedPass": {
+      "title": "Pre-Approved Pass",
+      "description": "Pre-approved visitor pass created in advance by a resident.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "societyId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatNumber": { "type": "string", "maxLength": 20 },
+        "blockId": { "type": "string", "maxLength": 64 },
+        "residentId": { "type": "string", "maxLength": 128 },
+        "visitorName": { "type": "string", "maxLength": 100 },
+        "visitorPhone": { "type": "string", "maxLength": 20 },
+        "purpose": { "type": "string", "maxLength": 100 },
+        "date": { "type": "string", "maxLength": 20 },
+        "time": { "type": "string", "maxLength": 20 },
+        "numberOfGuests": { "type": "integer" },
+        "vehicleNumber": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["ACTIVE", "USED", "EXPIRED"] },
+        "qrCode": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "societyId", "flatId", "flatNumber", "blockId", "residentId", "visitorName", "visitorPhone", "purpose", "date", "time", "numberOfGuests", "status", "qrCode", "createdAt"]
+    },
+    "BlacklistedPhone": {
+      "title": "Blacklisted Phone",
+      "description": "Blacklisted phone number within a society to alert security guards.",
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string", "maxLength": 20 },
+        "name": { "type": "string", "maxLength": 100 },
+        "reason": { "type": "string", "maxLength": 200 },
+        "blacklistedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["phone", "name", "reason", "blacklistedBy", "createdAt"]
+    },
+    "DeliveryLog": {
+      "title": "Delivery Log",
+      "description": "Log of delivery partner arrivals, approvals, and checkout timestamps.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "societyId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatNumber": { "type": "string", "maxLength": 20 },
+        "blockId": { "type": "string", "maxLength": 64 },
+        "companyName": { "type": "string", "maxLength": 100 },
+        "deliveryPersonName": { "type": "string", "maxLength": 100 },
+        "deliveryPersonPhone": { "type": "string", "maxLength": 20 },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "vehicleNumber": { "type": "string", "maxLength": 20 },
+        "trackingNumber": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "CHECKED_IN", "CHECKED_OUT", "CANCELLED", "LEAVE_AT_GATE", "LEAVE_AT_RECEPTION", "ALLOW_DIRECT_ENTRY"] }
+      },
+      "required": ["id", "societyId", "flatId", "flatNumber", "blockId", "companyName", "deliveryPersonName", "deliveryPersonPhone", "status"]
+    },
+    "ExpectedDelivery": {
+      "title": "Expected Delivery",
+      "description": "Pre-approved expected delivery created in advance by a resident.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "societyId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatId": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "flatNumber": { "type": "string", "maxLength": 20 },
+        "blockId": { "type": "string", "maxLength": 64 },
+        "residentId": { "type": "string", "maxLength": 128 },
+        "companyName": { "type": "string", "maxLength": 100 },
+        "trackingNumber": { "type": "string", "maxLength": 100 },
+        "expectedDate": { "type": "string", "maxLength": 20 },
+        "expectedTime": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["EXPECTED", "ARRIVED", "EXPIRED"] }
+      },
+      "required": ["id", "societyId", "flatId", "flatNumber", "blockId", "residentId", "companyName", "expectedDate", "expectedTime", "status"]
+    }
+  },
+  "firestore": {
+    "/societies/{societyId}": {
+      "schema": "Society",
+      "description": "Individual tenant society details."
+    },
+    "/users/{userId}/public/profile": {
+      "schema": "UserProfilePublic",
+      "description": "Isolated public user profile details, readable by society members."
+    },
+    "/users/{userId}/private/info": {
+      "schema": "UserProfilePrivate",
+      "description": "Isolated private sensitive user settings and verification keys."
+    },
+    "/societies/{societyId}/blocks/{blockId}": {
+      "schema": "TowerBlock",
+      "description": "Blocks/Towers sub-collection under society."
+    },
+    "/societies/{societyId}/flats/{flatId}": {
+      "schema": "Flat",
+      "description": "Individual flats sub-collection under society."
+    },
+    "/societies/{societyId}/residents/{residentId}": {
+      "schema": "Resident",
+      "description": "Residents mapped to their flats."
+    },
+    "/societies/{societyId}/guards/{guardId}": {
+      "schema": "SecurityGuard",
+      "description": "Guards mapped to their gates/shifts."
+    },
+    "/societies/{societyId}/vehicles/{vehicleId}": {
+      "schema": "Vehicle",
+      "description": "Vehicles registered with society flats."
+    },
+    "/societies/{societyId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Notifications and announcements generated within society."
+    },
+    "/societies/{societyId}/settings/config": {
+      "schema": "SocietySettings",
+      "description": "Configuration metadata document for society tenant."
+    },
+    "/societies/{societyId}/visitors/{visitorId}": {
+      "schema": "VisitorLog",
+      "description": "Logs and active statuses of all visitors entering the society."
+    },
+    "/societies/{societyId}/pre_approvals/{passId}": {
+      "schema": "PreApprovedPass",
+      "description": "Pre-approved passes generated by residents."
+    },
+    "/societies/{societyId}/blacklist/{phone}": {
+      "schema": "BlacklistedPhone",
+      "description": "Blacklisted visitors within a specific society."
+    },
+    "/societies/{societyId}/deliveries/{deliveryId}": {
+      "schema": "DeliveryLog",
+      "description": "Logs and active statuses of all delivery partners entering the society."
+    },
+    "/societies/{societyId}/expected_deliveries/{expectedId}": {
+      "schema": "ExpectedDelivery",
+      "description": "Expected pre-approved deliveries registered by residents."
+    }
+  }
+}
